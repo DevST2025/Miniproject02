@@ -18,3 +18,4 @@ const notify = (state = initState, action) => {
 };
 
 export default notify;
+

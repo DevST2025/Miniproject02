@@ -19,6 +19,11 @@ const reducer = (state = initialState, action) => {
         if (checkCartExist(state, action.payload.item.productId)) {
           for (let i = 0; i < state.length; i++) {
             if (action.payload.item.productId === state[i].productId) {
+              if (state[i].quantity >= state[i].stock) {
+                alert("Số lượng trong kho không đủ");
+                state[i].quantity = state[i].stock;
+                break;
+              }
               state[i].quantity += action.payload.quantity;
               break;
             }
@@ -32,12 +37,19 @@ const reducer = (state = initialState, action) => {
           state = [...state, newItem];
         }
       }
+
       localStorage.setItem("productCart", JSON.stringify(state));
+      location.reload();
       return state;
     case INCREASE:
       if (checkCartExist(state, action.payload)) {
         for (let i = 0; i < state.length; i++) {
           if (state[i].productId === action.payload) {
+            if (state[i].quantity >= state[i].stock) {
+              alert("Số lượng trong kho không đủ");
+              state[i].quantity = state[i].stock;
+              break;
+            }
             state[i].quantity++;
             break
           }
@@ -50,8 +62,11 @@ const reducer = (state = initialState, action) => {
       if (checkCartExist(state, action.payload)) {
         for (let i = 0; i < state.length; i++) {
           if (state[i].productId === action.payload) {
-
-          state[i].quantity--;
+            if (state[i].quantity > 1) {
+              state[i].quantity--;
+            } else {
+              break
+            }
           break
         }
       }
